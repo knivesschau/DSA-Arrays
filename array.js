@@ -1,17 +1,18 @@
-import Memory from './memory';
+const Memory = require('./memory');
+const memory = new Memory();
 
 class Array {
     constructor() {
         this.length = 0;
         this._capacity = 0;
-        this.ptr = Memory.allocate(this.length);
+        this.ptr = memory.allocate(this.length);
     }
 
     push(value) {
         if (this.length >= this._capacity) {
             this._resize((this.length + 1) * Array.SIZE_RATIO)
         }
-        Memory.set(this.ptr + this.length, value);
+        memory.set(this.ptr + this.length, value);
         this.length++;
     }
 
@@ -31,14 +32,14 @@ class Array {
         if (index < 0 || index >= this.length) {
             throw new Error('Index error')
         }
-        return Memory.get(this.ptr + index);
+        return memory.get(this.ptr + index);
     }
 
     pop() {
         if (this.length === 0) {
             throw new Error('Index error');
         }
-        const value = Memory.get(this.ptr + this.length - 1);
+        const value = memory.get(this.ptr + this.length - 1);
         this.length--;
         return value;
     }
@@ -62,9 +63,38 @@ class Array {
         memory.copy(this.ptr + index, this.ptr + index + 1, this.length - index - 1); 
         this.length--;
     }
-
 }
 
-Array.SIZE_RATIO = 3; 
+function main() {
+    Array.SIZE_RATIO = 3; 
+
+    let arr = new Array();
+
+    arr.push(3);
+    arr.push(5);
+    arr.push(15);
+    arr.push(19);
+    arr.push(45);
+    arr.push(10);
+
+    arr.pop();
+    arr.pop();
+    arr.pop();
+    console.log(arr);
+
+    console.log(arr.get(0));
+
+    arr.remove(2);
+    arr.remove(1);
+    arr.remove(0);
+
+    arr.push("tauhida");
+
+    console.log(arr.get(0));
+
+    console.log(arr);
+}
+
+main();
 
 module.exports = Array;
